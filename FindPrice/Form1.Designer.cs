@@ -32,15 +32,16 @@
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.PchomecheckBox = new System.Windows.Forms.CheckBox();
             this.MomocheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.PchomecheckBox = new System.Windows.Forms.CheckBox();
             this.Platform = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ProductName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.價格 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.spec = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.URL = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.YahoocheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -78,6 +79,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.YahoocheckBox);
             this.groupBox2.Controls.Add(this.PchomecheckBox);
             this.groupBox2.Controls.Add(this.MomocheckBox);
             this.groupBox2.Location = new System.Drawing.Point(212, 12);
@@ -87,6 +89,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "搜尋平台";
             this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
+            // 
+            // PchomecheckBox
+            // 
+            this.PchomecheckBox.AutoSize = true;
+            this.PchomecheckBox.Location = new System.Drawing.Point(7, 44);
+            this.PchomecheckBox.Name = "PchomecheckBox";
+            this.PchomecheckBox.Size = new System.Drawing.Size(61, 16);
+            this.PchomecheckBox.TabIndex = 1;
+            this.PchomecheckBox.Text = "Pchome";
+            this.PchomecheckBox.UseVisualStyleBackColor = true;
             // 
             // MomocheckBox
             // 
@@ -124,16 +136,6 @@
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
-            // PchomecheckBox
-            // 
-            this.PchomecheckBox.AutoSize = true;
-            this.PchomecheckBox.Location = new System.Drawing.Point(7, 44);
-            this.PchomecheckBox.Name = "PchomecheckBox";
-            this.PchomecheckBox.Size = new System.Drawing.Size(61, 16);
-            this.PchomecheckBox.TabIndex = 1;
-            this.PchomecheckBox.Text = "Pchome";
-            this.PchomecheckBox.UseVisualStyleBackColor = true;
-            // 
             // Platform
             // 
             this.Platform.HeaderText = "平台";
@@ -163,6 +165,16 @@
             this.URL.HeaderText = "網址";
             this.URL.Name = "URL";
             this.URL.ReadOnly = true;
+            // 
+            // YahoocheckBox
+            // 
+            this.YahoocheckBox.AutoSize = true;
+            this.YahoocheckBox.Location = new System.Drawing.Point(7, 65);
+            this.YahoocheckBox.Name = "YahoocheckBox";
+            this.YahoocheckBox.Size = new System.Drawing.Size(55, 16);
+            this.YahoocheckBox.TabIndex = 2;
+            this.YahoocheckBox.Text = "Yahoo";
+            this.YahoocheckBox.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -199,6 +211,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn 價格;
         private System.Windows.Forms.DataGridViewTextBoxColumn spec;
         private System.Windows.Forms.DataGridViewLinkColumn URL;
+        private System.Windows.Forms.CheckBox YahoocheckBox;
     }
 }
 

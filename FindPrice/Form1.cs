@@ -75,7 +75,14 @@ namespace FindPrice
                 SearchPchome.SearchPchome.FindPrice(this.textBox1.Text, ref PriceInfo);
                 PlatformProductInfo.Add("Pchome", PriceInfo);
             }
-            
+
+            if (this.YahoocheckBox.Checked)
+            {
+                Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> PriceInfo =
+                    new Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>();
+                SearchYahoo.SearchYahoo.FindPrice(this.textBox1.Text, ref PriceInfo);
+                PlatformProductInfo.Add("Yahoo", PriceInfo);
+            }
 
             //output info
             foreach (var Platform in PlatformProductInfo)
