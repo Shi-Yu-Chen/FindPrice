@@ -32,16 +32,16 @@
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.YahoocheckBox = new System.Windows.Forms.CheckBox();
             this.PchomecheckBox = new System.Windows.Forms.CheckBox();
             this.MomocheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Platform = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ProductName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PN = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.價格 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.spec = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.URL = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.YahoocheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -90,6 +90,16 @@
             this.groupBox2.Text = "搜尋平台";
             this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
+            // YahoocheckBox
+            // 
+            this.YahoocheckBox.AutoSize = true;
+            this.YahoocheckBox.Location = new System.Drawing.Point(7, 65);
+            this.YahoocheckBox.Name = "YahoocheckBox";
+            this.YahoocheckBox.Size = new System.Drawing.Size(55, 16);
+            this.YahoocheckBox.TabIndex = 2;
+            this.YahoocheckBox.Text = "Yahoo";
+            this.YahoocheckBox.UseVisualStyleBackColor = true;
+            // 
             // PchomecheckBox
             // 
             this.PchomecheckBox.AutoSize = true;
@@ -125,7 +135,7 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Platform,
-            this.ProductName,
+            this.PN,
             this.價格,
             this.spec,
             this.URL});
@@ -142,11 +152,11 @@
             this.Platform.Name = "Platform";
             this.Platform.ReadOnly = true;
             // 
-            // ProductName
+            // PN
             // 
-            this.ProductName.HeaderText = "品名";
-            this.ProductName.Name = "ProductName";
-            this.ProductName.ReadOnly = true;
+            this.PN.HeaderText = "品名";
+            this.PN.Name = "PN";
+            this.PN.ReadOnly = true;
             // 
             // 價格
             // 
@@ -165,16 +175,6 @@
             this.URL.HeaderText = "網址";
             this.URL.Name = "URL";
             this.URL.ReadOnly = true;
-            // 
-            // YahoocheckBox
-            // 
-            this.YahoocheckBox.AutoSize = true;
-            this.YahoocheckBox.Location = new System.Drawing.Point(7, 65);
-            this.YahoocheckBox.Name = "YahoocheckBox";
-            this.YahoocheckBox.Size = new System.Drawing.Size(55, 16);
-            this.YahoocheckBox.TabIndex = 2;
-            this.YahoocheckBox.Text = "Yahoo";
-            this.YahoocheckBox.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -206,12 +206,12 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.CheckBox MomocheckBox;
         private System.Windows.Forms.CheckBox PchomecheckBox;
+        private System.Windows.Forms.CheckBox YahoocheckBox;
         private System.Windows.Forms.DataGridViewTextBoxColumn Platform;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ProductName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PN;
         private System.Windows.Forms.DataGridViewTextBoxColumn 價格;
         private System.Windows.Forms.DataGridViewTextBoxColumn spec;
         private System.Windows.Forms.DataGridViewLinkColumn URL;
-        private System.Windows.Forms.CheckBox YahoocheckBox;
     }
 }
 

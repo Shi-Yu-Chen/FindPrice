@@ -12,24 +12,34 @@ namespace SearchYahoo
 {
     public class SearchYahoo
     {
-        static IWebDriver LocalDriver;
+        static IWebDriver LocalDriver_;
+        private string SearchKeyWord_;
+        private Dictionary<string, Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>> ProductDetail_;
 
-        static public bool FindPrice(string SearchKeyWord, ref Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> ProductDetail)
+        public SearchYahoo(string SearchKeyWord, ref Dictionary<string, Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>> ProductDetail)
+        {
+            this.SearchKeyWord_ = SearchKeyWord;
+            this.ProductDetail_ = ProductDetail;
+        }
+
+        public void FindPrice()
         {
             IWebDriver driver = new RemoteWebDriver(new Uri("http://192.168.1.4:4444/wd/hub"), DesiredCapabilities.Firefox());
 
             //超級商城
             driver.Navigate().GoToUrl("https://tw.mall.yahoo.com/");
 
-            driver.FindElement(By.XPath("//*[@id=\"srp-ac-bar\"]")).SendKeys(SearchKeyWord);
+            driver.FindElement(By.XPath("//*[@id=\"srp-ac-bar\"]")).SendKeys(this.SearchKeyWord_);
             driver.FindElement(By.XPath("//*[@id=\"UHSearchProperty\"]")).Click();
+
+            Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> info = new Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>();
 
             for (; ; )
             {
                 List<IWebElement> products = driver.FindElements(By.XPath("//*[@id=\"srp_result_list\"]/div/div/div[1]/a")).ToList();
                 foreach (var product in products)
                 {
-                    ReadProductDetailMail(product.GetAttribute("href"), ref ProductDetail);
+                    ReadProductDetailMail(product.GetAttribute("href"), ref info);
                 }
 
                 try
@@ -57,7 +67,7 @@ namespace SearchYahoo
             
             //購物中心
             driver.Navigate().GoToUrl("https://tw.buy.yahoo.com/");
-            driver.FindElement(By.XPath("//*[@id=\"srp-ac-bar\"]")).SendKeys(SearchKeyWord);
+            driver.FindElement(By.XPath("//*[@id=\"srp-ac-bar\"]")).SendKeys(this.SearchKeyWord_);
             driver.FindElement(By.XPath("//*[@id=\"UHSearchProperty\"]")).Click();
             List<IWebElement> buyproducts = driver.FindElements(By.XPath("//*[@id=\"srp_result_list\"]/div/div/div[1]/a")).ToList();
 
@@ -66,7 +76,7 @@ namespace SearchYahoo
                 List<IWebElement> products = driver.FindElements(By.XPath("//*[@id=\"srp_result_list\"]/div/div/div[1]/a")).ToList();
                 foreach (var product in buyproducts)
                 {
-                    ReadProductDetailBuy(product.GetAttribute("href"), ref ProductDetail);
+                    ReadProductDetailBuy(product.GetAttribute("href"), ref info);
                 }
 
                 try
@@ -89,25 +99,30 @@ namespace SearchYahoo
                 }
             }
 
+
+            this.ProductDetail_.Add("Yahoo", info);
             driver.Quit();
-            LocalDriver.Quit();
-            return true;
+            if (LocalDriver_ != null)
+            {
+                LocalDriver_.Quit();
+            }
+            return;
         }
 
         static private bool ReadProductDetailMail(string URL, ref Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> ProductDetail)
         {
-            if (LocalDriver == null)
+            if (LocalDriver_ == null)
             {
-                LocalDriver = new RemoteWebDriver(new Uri("http://192.168.1.4:4444/wd/hub"), DesiredCapabilities.Firefox());
+                LocalDriver_ = new RemoteWebDriver(new Uri("http://192.168.1.4:4444/wd/hub"), DesiredCapabilities.Firefox());
             }
-            LocalDriver.Navigate().GoToUrl(URL);
+            LocalDriver_.Navigate().GoToUrl(URL);
 
             Dictionary<ProductInfo.ProductInfo, string> info = new Dictionary<ProductInfo.ProductInfo, string>();
             try
             {
                 info.Add(ProductInfo.ProductInfo.URL, URL);
-                info.Add(ProductInfo.ProductInfo.name, LocalDriver.FindElement(By.XPath("//*[@id=\"ypsiif\"]/div/div[1]/div[4]/div[1]/h1/span[1]")).Text);
-                info.Add(ProductInfo.ProductInfo.price, LocalDriver.FindElement(By.XPath("//span[@itemprop=\"price\"]")).Text);
+                info.Add(ProductInfo.ProductInfo.name, LocalDriver_.FindElement(By.XPath("//*[@id=\"ypsiif\"]/div/div[1]/div[4]/div[1]/h1/span[1]")).Text);
+                info.Add(ProductInfo.ProductInfo.price, LocalDriver_.FindElement(By.XPath("//span[@itemprop=\"price\"]")).Text);
             }
             catch (System.Exception ex)
             {
@@ -128,17 +143,17 @@ namespace SearchYahoo
 
         static private bool ReadProductDetailBuy(string URL, ref Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> ProductDetail)
         {
-            if (LocalDriver == null)
+            if (LocalDriver_ == null)
             {
-                LocalDriver = new RemoteWebDriver(new Uri("http://192.168.1.4:4444/wd/hub"), DesiredCapabilities.Firefox());
+                LocalDriver_ = new RemoteWebDriver(new Uri("http://192.168.1.4:4444/wd/hub"), DesiredCapabilities.Firefox());
             }
-            LocalDriver.Navigate().GoToUrl(URL);
+            LocalDriver_.Navigate().GoToUrl(URL);
 
             Dictionary<ProductInfo.ProductInfo, string> info = new Dictionary<ProductInfo.ProductInfo, string>();
             info.Add(ProductInfo.ProductInfo.URL, URL);
-            info.Add(ProductInfo.ProductInfo.name, LocalDriver.FindElement(
+            info.Add(ProductInfo.ProductInfo.name, LocalDriver_.FindElement(
                 By.XPath("//h1")).Text);
-            info.Add(ProductInfo.ProductInfo.price, LocalDriver.FindElement(
+            info.Add(ProductInfo.ProductInfo.price, LocalDriver_.FindElement(
                 By.XPath("//div[@class=\"priceinfo\"]/span[2]")).Text);
 
             var name = info[ProductInfo.ProductInfo.name];

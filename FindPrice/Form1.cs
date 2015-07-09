@@ -56,32 +56,38 @@ namespace FindPrice
         {
             //cleanup
             this.dataGridView1.Rows.Clear();
-
-            //Dictionary<string, Dictionary<string, string>> ALLPriceInfo = new Dictionary<string, Dictionary<string, string>>();
+            List<Thread> threadpool = new List<Thread>();
+            
             Dictionary<string, Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>> PlatformProductInfo = 
                 new Dictionary<string, Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>>();
             if (this.MomocheckBox.Checked)
             {
-                Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> PriceInfo = 
-                    new Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>();
-                SearchMomo.SearchMomo.FindPrice(this.textBox1.Text, ref PriceInfo);
-                PlatformProductInfo.Add("Momo", PriceInfo);
+                SearchMomo.SearchMomo momo = new SearchMomo.SearchMomo(this.textBox1.Text, ref PlatformProductInfo);
+                threadpool.Add(new Thread(momo.FindPrice));
+                threadpool.Last().Start();
             }
 
             if (this.PchomecheckBox.Checked)
             {
-                Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> PriceInfo =
-                    new Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>();
-                SearchPchome.SearchPchome.FindPrice(this.textBox1.Text, ref PriceInfo);
-                PlatformProductInfo.Add("Pchome", PriceInfo);
+                SearchPchome.SearchPchome pchome = new SearchPchome.SearchPchome(this.textBox1.Text, ref PlatformProductInfo);
+                threadpool.Add(new Thread(pchome.FindPrice));
+                threadpool.Last().Start();
             }
 
             if (this.YahoocheckBox.Checked)
             {
-                Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> PriceInfo =
-                    new Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>();
-                SearchYahoo.SearchYahoo.FindPrice(this.textBox1.Text, ref PriceInfo);
-                PlatformProductInfo.Add("Yahoo", PriceInfo);
+                SearchYahoo.SearchYahoo yahoo = new SearchYahoo.SearchYahoo(this.textBox1.Text, ref PlatformProductInfo);
+                threadpool.Add(new Thread(yahoo.FindPrice));
+                threadpool.Last().Start();
+            }
+
+            //wait for all thread finish
+            foreach (var threads in threadpool)
+            {
+                while (threads.IsAlive)
+                {
+                    Thread.Sleep(500);
+                }
             }
 
             //output info

@@ -13,22 +13,32 @@ namespace SearchMomo
 {
     public class SearchMomo
     {
-        static private IWebDriver driver_;
+        private IWebDriver LocalDriver_;
+        private string SearchKeyWord_;
+        private Dictionary<string, Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>> ProductDetail_;
 
-        static public bool FindPrice(string SearchKeyWord, ref Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> ProductDetail)
+        public SearchMomo(string SearchKeyWord, ref Dictionary<string, Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>> ProductDetail)
         {
-            driver_ = new RemoteWebDriver(new Uri("http://192.168.1.4:4444/wd/hub"), DesiredCapabilities.Firefox());
+            this.SearchKeyWord_ = SearchKeyWord;
+            this.ProductDetail_ = ProductDetail;
+        }
+
+        public void FindPrice()
+        {
+            IWebDriver driver_ = new RemoteWebDriver(new Uri("http://192.168.1.4:4444/wd/hub"), DesiredCapabilities.Firefox());
             driver_.Navigate().GoToUrl("http://www.momoshop.com.tw");
 
 
-            driver_.FindElement(By.CssSelector("#keyword")).SendKeys(SearchKeyWord);
+            driver_.FindElement(By.CssSelector("#keyword")).SendKeys(this.SearchKeyWord_);
             driver_.FindElement(By.CssSelector(".inputbtn")).Click();
+
+            Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> info = new Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>>();
 
             try
             {
                 if (driver_.FindElements(By.XPath("//*[@id=\"BodyBase\"]/form[1]/div/div[2]/div[5]/ul/li")).ToList().Count == 0)
                 {
-                    ReadProductDetail(driver_.Url, ref ProductDetail);
+                    ReadProductDetail(driver_.Url, ref info);
                 }
                 else
                 {
@@ -39,7 +49,7 @@ namespace SearchMomo
                         List<IWebElement> products = driver_.FindElements(By.XPath("//*[@id=\"chessboard\"]/li/a")).ToList();
                         foreach (var product in products)
                         {
-                            ReadProductDetail(product.GetAttribute("href"), ref ProductDetail);
+                            ReadProductDetail(product.GetAttribute("href"), ref info);
                         }
 
                         //Last Page
@@ -59,29 +69,37 @@ namespace SearchMomo
             {
             }
 
+            this.ProductDetail_.Add("momo", info);
             driver_.Quit();
-            return true;
+            if (LocalDriver_ != null)
+            {
+                LocalDriver_.Quit();
+            }
+            return;
         }
 
-        static private bool ReadProductDetail(string URL, ref Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> ProductDetail)
+        private bool ReadProductDetail(string URL, ref Dictionary<string, Dictionary<ProductInfo.ProductInfo, string>> ProductDetail)
         {
-            IWebDriver LocalDriver = new RemoteWebDriver(new Uri("http://192.168.1.4:4444/wd/hub"), DesiredCapabilities.Firefox());
-            //IWebDriver LocalDriver = new FirefoxDriver();
+            if (LocalDriver_ == null)
+            {
+                LocalDriver_ = new RemoteWebDriver(new Uri("http://192.168.1.4:4444/wd/hub"), DesiredCapabilities.Firefox());
+            }
+            
 
-            LocalDriver.Navigate().GoToUrl(URL);
+            LocalDriver_.Navigate().GoToUrl(URL);
 
             Dictionary<ProductInfo.ProductInfo, string> info = new Dictionary<ProductInfo.ProductInfo, string>();
 
             info.Add(ProductInfo.ProductInfo.URL, URL);
-            info.Add(ProductInfo.ProductInfo.name, LocalDriver.FindElement(By.XPath("//*[@id=\"productForm\"]/div[2]/div[1]/h1")).Text);
-            info.Add(ProductInfo.ProductInfo.price, LocalDriver.FindElement(By.XPath("//*[@id=\"productForm\"]/div[2]/div[1]/table[1]/tbody/tr[2]/td/span/b")).Text);
+            info.Add(ProductInfo.ProductInfo.name, LocalDriver_.FindElement(By.XPath("//*[@id=\"productForm\"]/div[2]/div[1]/h1")).Text);
+            info.Add(ProductInfo.ProductInfo.price, LocalDriver_.FindElement(By.XPath("//*[@id=\"productForm\"]/div[2]/div[1]/table[1]/tbody/tr[2]/td/span/b")).Text);
 
-            LocalDriver.FindElement(By.XPath("//*[@id=\"productForm\"]/div[2]/ul/li[2]/b")).Click();
+            LocalDriver_.FindElement(By.XPath("//*[@id=\"productForm\"]/div[2]/ul/li[2]/b")).Click();
             
             var spec = "";
             while(spec == "")
             {
-                spec = LocalDriver.FindElement(By.CssSelector("#productForm > div.prdwarp.bt770class > div.vendordetailview.specification")).Text;
+                spec = LocalDriver_.FindElement(By.CssSelector("#productForm > div.prdwarp.bt770class > div.vendordetailview.specification")).Text;
                 Thread.Sleep(500);
             }
             List<string> spec_split = spec.Split(new string[] { Environment.NewLine }, StringSplitOptions.None).ToList();
@@ -103,8 +121,6 @@ namespace SearchMomo
             }
 
             ProductDetail.Add(info[ProductInfo.ProductInfo.name], info);
-
-            LocalDriver.Quit();
             return true;
         }
     }
